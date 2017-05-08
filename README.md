@@ -9,6 +9,7 @@ Cloud Robotics FX V2 is based on the latest micro service architecture and is bu
 This new IoT application server has high availability, hight reliability and high scalability which Service Fabric provides in addition of the same functionalities as Cloud Robotics FX (V1).
 
 Please refer to setup guide to run the Cloud Robotics FX V2.
+
 --
 
 Cloud Robotics FX は、Azure IoT Hub を対象にしたクラウドサービス ベースの アプリケーション サーバーです。デバイス ルーティング、アプリケーション ルーティング、デバイス制御などの機能を提供しています。クラウドサービスは、安定したテクノロジーですが、Azure の中では、ASM（非 ARM）をベースとした最も古い PaaS となります。
