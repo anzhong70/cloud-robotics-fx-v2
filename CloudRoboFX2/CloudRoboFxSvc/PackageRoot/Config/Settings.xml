@@ -1,0 +1,33 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Settings xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://schemas.microsoft.com/2011/01/fabric">
+  <!-- これは StateManager のレプリケーターにより使用されます。-->
+  <Section Name="ReplicatorConfig">
+    <Parameter Name="ReplicatorEndpoint" Value="ReplicatorEndpoint" />
+  </Section>
+  <!-- これは StateManager のレプリケーション トラフィックをセキュリティで保護するために使用されます。-->
+  <Section Name="ReplicatorSecurityConfig" />
+
+  <!-- カスタム構成セクション -->
+  <Section Name="IoTHub.ConnectionInfo">
+    <Parameter Name="ConnectionString" Value="HostName=xxxxxxxx.azure-devices.net;SharedAccessKeyName=iothubowner;SharedAccessKey=xxxxxxxxxxxxxxxxxxxxxxx" />
+    <Parameter Name="ConsumerGroup" Value="cloudroboticsfxcg" />
+  </Section>
+  <Section Name="Sql.ConnectionInfo">
+    <Parameter Name="ConnectionString" Value="Server=tcp:xxxxxxxx.database.windows.net,1433;Database=MYDB;User ID=xxxxxxxx;Password=xxxxxxxx;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;" />
+  </Section>
+  <Section Name="RbSetting.Info">
+    <Parameter Name="EncPassPhrase" Value="This is a passphrase!!" />
+    <Parameter Name="CacheExpiredTimeSec" Value="60" />
+  </Section>
+  <Section Name="RbTrace.Info">
+    <Parameter Name="StorageAccount" Value="xxxxxxxx" />
+    <Parameter Name="StorageKey" Value="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx" />
+    <Parameter Name="StorageTableName" Value="RbTraceLog" />
+    <Parameter Name="TraceLevel" Value="Detail" />
+  </Section>
+  <Section Name="RbC2dLog.Info">
+    <Parameter Name="Enabled" Value="true" />
+    <Parameter Name="EventHubConnString" Value="Endpoint=sb://xxxxxxxx.servicebus.windows.net/;SharedAccessKeyName=SendMessagePolicy;SharedAccessKey=xxxxxxxxxxxxxxxxxxxxxxxx" />
+    <Parameter Name="EventHubName" Value="xxxxxxxx" />
+  </Section>
+</Settings>

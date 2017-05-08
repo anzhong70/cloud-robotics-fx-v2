@@ -1,0 +1,1 @@
+C:\Users\seijim\Documents\22_技術検証_2\491.ServiceFabric\T04_NextFX\CloudRoboFX2\CloudRoboFX2\obj\x64\Release\CloudRoboFX2.sfprojResolveAssemblyReference.cache
