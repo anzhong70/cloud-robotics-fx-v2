@@ -1,7 +1,7 @@
 # Cloud Robotics FX V2
 --Japanese follows English.
 
-Cloud Robotics FX is a Azure Cloud Services based application server for Azure IoT Hub. It provides features of device routing, application routing and device control. Cloud Services is stable technology, but ASM (no-ARM) based oldest PaaS in Azure.
+Cloud Robotics FX (V1) is a Azure Cloud Services based application server for Azure IoT Hub. It provides features of device routing, application routing and device control. Cloud Services is stable technology, but ASM (no-ARM) based oldest PaaS in Azure.
 
 https://github.com/seijim/cloud-robotics-azure-platform-v1-sdk/tree/master/CloudRoboticsFX
 
@@ -12,7 +12,7 @@ Please refer to setup guide to run the Cloud Robotics FX V2.
 
 --
 
-Cloud Robotics FX は、Azure IoT Hub を対象にしたクラウドサービス ベースの アプリケーション サーバーです。デバイス ルーティング、アプリケーション ルーティング、デバイス制御などの機能を提供しています。クラウドサービスは、安定したテクノロジーですが、Azure の中では、ASM（非 ARM）をベースとした最も古い PaaS となります。
+Cloud Robotics FX (V1) は、Azure IoT Hub を対象にしたクラウドサービス ベースの アプリケーション サーバーです。デバイス ルーティング、アプリケーション ルーティング、デバイス制御などの機能を提供しています。クラウドサービスは、安定したテクノロジーですが、Azure の中では、ASM（非 ARM）をベースとした最も古い PaaS となります。
 
 https://github.com/seijim/cloud-robotics-azure-platform-v1-sdk/tree/master/CloudRoboticsFX
 
