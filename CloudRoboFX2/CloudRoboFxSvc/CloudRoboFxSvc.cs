@@ -266,7 +266,7 @@ namespace CloudRoboticsFX
 
                     try
                     {
-                        using (EventData eventData = await eventHubReceiver.ReceiveAsync(TimeSpan.FromSeconds(0.5)))
+                        using (EventData eventData = await eventHubReceiver.ReceiveAsync(TimeSpan.FromSeconds(0.1)))
                         {
                             // Check if eventData exists
                             if (eventData == null)
@@ -540,10 +540,6 @@ namespace CloudRoboticsFX
             }
             finally
             {
-                if (eventHubReceiver != null)
-                {
-                    await eventHubReceiver.CloseAsync();
-                }
                 if (messagingFactory != null)
                 {
                     await messagingFactory.CloseAsync();
