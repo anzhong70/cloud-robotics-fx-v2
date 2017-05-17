@@ -32,19 +32,20 @@ namespace CloudRoboticsUtil
                 {
                     var sendMessage = new Message(Encoding.UTF8.GetBytes(msg));
                     ServiceClient serviceClient = ServiceClient.CreateFromConnectionString(_iotHubConnString);
-                    //await serviceClient.SendAsync(jo_TargetDeviceId, sendMessage);
-                    serviceClient.SendAsync(jo_TargetDeviceId, sendMessage);
+                    await serviceClient.SendAsync(jo_TargetDeviceId, sendMessage);
+                    await serviceClient.CloseAsync();
                 }
                 else
                 {
                     DeviceGroup dg = new DeviceGroup(jo_TargetDeviceGroupId, _sqlConnString);
                     List<string> deviceList = dg.GetDeviceGroupList();
+                    ServiceClient serviceClient = ServiceClient.CreateFromConnectionString(_iotHubConnString);
+                    var sendMessage = new Message(Encoding.UTF8.GetBytes(msg));
                     foreach (string deviceId in deviceList)
                     {
-                        var sendMessage = new Message(Encoding.UTF8.GetBytes(msg));
-                        ServiceClient serviceClient = ServiceClient.CreateFromConnectionString(_iotHubConnString);
-                        serviceClient.SendAsync(deviceId, sendMessage);
+                        await serviceClient.SendAsync(deviceId, sendMessage);
                     }
+                    await serviceClient.CloseAsync();
                 }
             }
         }
