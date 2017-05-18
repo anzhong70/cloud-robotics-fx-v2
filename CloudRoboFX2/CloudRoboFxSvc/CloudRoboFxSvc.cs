@@ -219,7 +219,8 @@ namespace CloudRoboticsFX
                     .Value;
 
             // Initialize RbTraceLog
-            rbTraceLog = new RbTraceLog2(rbTraceStorageConnString, rbTraceStorageTableName, "CloudRoboticsFx2", this.Context.TraceId.ToString());
+            rbTraceLog = new RbTraceLog2(rbTraceStorageConnString, rbTraceStorageTableName, 
+                                            "CloudRoboticsFx2", this.Context.TraceId.ToString());
 
             // These Reliable Dictionaries are used to keep track of our position in IoT Hub.
             // If this service fails over, this will allow it to pick up where it left off in the event stream.
@@ -266,7 +267,7 @@ namespace CloudRoboticsFX
 
                     try
                     {
-                        using (EventData eventData = await eventHubReceiver.ReceiveAsync(TimeSpan.FromSeconds(0.1)))
+                        using (EventData eventData = await eventHubReceiver.ReceiveAsync(TimeSpan.FromMilliseconds(100)))
                         {
                             // Check if eventData exists
                             if (eventData == null)
@@ -282,11 +283,14 @@ namespace CloudRoboticsFX
                             int loopCounter = 0;
                             while (true)
                             {
+                                JObject jo_message = null;
+
+                                // Routing switch
+                                bool devRouting = false;
+                                bool appRouting = false;
+
                                 try
                                 {
-                                    // Routing switch
-                                    bool devRouting = false;
-                                    bool appRouting = false;
 
                                     // Receive a message and system properties
                                     string iothub_deviceId = (string)eventData.SystemProperties["iothub-connection-device-id"];
@@ -316,7 +320,7 @@ namespace CloudRoboticsFX
                                     }
 
                                     // Check RbHeader simplly
-                                    JObject jo_message = JsonConvert.DeserializeObject<JObject>(text_message);
+                                    jo_message = JsonConvert.DeserializeObject<JObject>(text_message);
                                     var jo_rbh = (JObject)jo_message[RbFormatType.RbHeader];
 
                                     var v_rbhRoutingType = jo_rbh[RbHeaderElement.RoutingType];
@@ -380,8 +384,19 @@ namespace CloudRoboticsFX
                                     if (appRouting)
                                     {
                                         // Application Call Logic
-                                        JObject jo_temp = (JObject)jo_message[RbFormatType.RbBody];
-                                        string rbBodyString = JsonConvert.SerializeObject(jo_temp);
+                                        JObject jo_temp;
+                                        string rbBodyString;
+                                        try
+                                        {
+                                            jo_temp = (JObject)jo_message[RbFormatType.RbBody];
+                                            rbBodyString = JsonConvert.SerializeObject(jo_temp);
+                                        }
+                                        catch(Exception ex)
+                                        {
+                                            rbTraceLog.WriteError("E003", $"** RbBody is not regular JSON format ** {ex.ToString()}", jo_message);
+                                            goto TxCommitLabel;
+                                        }
+
                                         try
                                         {
                                             ja_messages = CallApps(rbh, rbBodyString, servicePartitionKey.ToString());
@@ -452,6 +467,8 @@ namespace CloudRoboticsFX
                                 }
                                 catch(Exception ex)
                                 {
+                                    rbTraceLog.WriteError("E003", $"** Critical error occured ** {ex.ToString()}", jo_message);
+
                                     bool continueLoop = false;
 
                                     if (ex != null && ex is SqlException)
@@ -468,7 +485,9 @@ namespace CloudRoboticsFX
                                         if (continueLoop)
                                         {
                                             ++loopCounter;
-                                            if (loopCounter >= maxLoopCounter)
+                                            rbTraceLog.WriteLog($"Transaction retry has started. Count({loopCounter})");
+
+                                            if (loopCounter > maxLoopCounter)
                                             {
                                                 break;  // Get out of retry loop because counter reached max number
                                             }
@@ -518,20 +537,25 @@ namespace CloudRoboticsFX
                     {
                         // transient error. Retry.
                         ServiceEventSource.Current.ServiceMessage(this.Context, $"TimeoutException in RunAsync: {te.ToString()}");
+                        rbTraceLog.WriteError("E004", $"** TimeoutException in RunAsync ** {te.ToString()}");
                     }
                     catch (FabricTransientException fte)
                     {
                         // transient error. Retry.
                         ServiceEventSource.Current.ServiceMessage(this.Context, $"FabricTransientException in RunAsync: {fte.ToString()}");
+                        rbTraceLog.WriteError("E005", $"** FabricTransientException in RunAsync ** {fte.ToString()}");
                     }
                     catch (FabricNotPrimaryException)
                     {
                         // not primary any more, time to quit.
+
+                        rbTraceLog.WriteError("E006", $"** FabricNotPrimaryException in RunAsync **");
                         return;
                     }
                     catch (Exception ex)
                     {
                         ServiceEventSource.Current.ServiceMessage(this.Context, ex.ToString());
+                        rbTraceLog.WriteError("E007", $"** Critical error occured ** {ex.ToString()}");
 
                         throw;
                     }
