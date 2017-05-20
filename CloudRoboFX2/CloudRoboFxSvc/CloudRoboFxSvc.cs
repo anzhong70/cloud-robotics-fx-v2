@@ -338,7 +338,17 @@ namespace CloudRoboticsFX
 
                                     // Check RbHeader in detail
                                     RbHeaderBuilder hdBuilder = new RbHeaderBuilder(jo_message, iothub_deviceId);
-                                    RbHeader rbh = hdBuilder.ValidateJsonSchema();
+                                    RbHeader rbh = null;
+                                    try
+                                    {
+                                        rbh = hdBuilder.ValidateJsonSchema();
+                                    }
+                                    catch(Exception ex)
+                                    {
+                                        rbTraceLog.WriteError("W002", "** Message skipped because of bad RbHeader **", ex);
+                                        goto TxCommitLabel;
+
+                                    }
 
                                     // Check RoutingType (CALL, D2D, CONTROL)
                                     if (rbh.RoutingType == RbRoutingType.CALL)
@@ -360,7 +370,7 @@ namespace CloudRoboticsFX
                                     }
                                     else
                                     {
-                                        rbTraceLog.WriteError("W002", "** Message skipped because of bad RoutingType **", jo_message);
+                                        rbTraceLog.WriteError("W003", "** Message skipped because of bad RoutingType **", jo_message);
                                         goto TxCommitLabel;
                                     }
 
@@ -418,7 +428,7 @@ namespace CloudRoboticsFX
                                     {
                                         if (rbh.AppProcessingId == null)
                                         {
-                                            rbTraceLog.WriteError("W003", "** Message skipped because AppProcessingId is null when CONTROL RoutingType **", jo_message);
+                                            rbTraceLog.WriteError("W004", "** Message skipped because AppProcessingId is null when CONTROL RoutingType **", jo_message);
                                             goto TxCommitLabel;
                                         }
                                         else if (rbh.AppProcessingId == RbControlType.ReqAppInfo)
@@ -435,7 +445,7 @@ namespace CloudRoboticsFX
                                         }
                                         else
                                         {
-                                            rbTraceLog.WriteError("W004", "** Message skipped because of bad AppProcessingId when CONTROL RoutingType **", jo_message);
+                                            rbTraceLog.WriteError("W005", "** Message skipped because of bad AppProcessingId when CONTROL RoutingType **", jo_message);
                                             goto TxCommitLabel;
                                         }
                                     }
