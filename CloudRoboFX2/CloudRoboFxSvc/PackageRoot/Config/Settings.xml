@@ -9,11 +9,11 @@
 
   <!-- カスタム構成セクション -->
   <Section Name="IoTHub.ConnectionInfo">
-    <Parameter Name="ConnectionString" Value="HostName=xxxxxxxx.azure-devices.net;SharedAccessKeyName=iothubowner;SharedAccessKey=xxxxxxxxxxxxxxxxxxxxxxx" />
+    <Parameter Name="ConnectionString" Value="HostName=xxxxxxxx.azure-devices.net;SharedAccessKeyName=iothubowner;SharedAccessKey=xxxxxxxx" />
     <Parameter Name="ConsumerGroup" Value="cloudroboticsfxcg" />
   </Section>
   <Section Name="Sql.ConnectionInfo">
-    <Parameter Name="ConnectionString" Value="Server=tcp:xxxxxxxx.database.windows.net,1433;Database=MYDB;User ID=xxxxxxxx;Password=xxxxxxxx;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;" />
+    <Parameter Name="ConnectionString" Value="Server=tcp:xxxxxxxx.database.windows.net,1433;Database=xxxxxxxx;User ID=xxxxxxxx;Password=xxxxxxxx;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;" />
   </Section>
   <Section Name="RbSetting.Info">
     <Parameter Name="EncPassPhrase" Value="This is a passphrase!!" />
@@ -21,13 +21,13 @@
   </Section>
   <Section Name="RbTrace.Info">
     <Parameter Name="StorageAccount" Value="xxxxxxxx" />
-    <Parameter Name="StorageKey" Value="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx" />
+    <Parameter Name="StorageKey" Value="xxxxxxxx" />
     <Parameter Name="StorageTableName" Value="RbTraceLog" />
     <Parameter Name="TraceLevel" Value="Detail" />
   </Section>
   <Section Name="RbC2dLog.Info">
     <Parameter Name="Enabled" Value="true" />
-    <Parameter Name="EventHubConnString" Value="Endpoint=sb://xxxxxxxx.servicebus.windows.net/;SharedAccessKeyName=SendMessagePolicy;SharedAccessKey=xxxxxxxxxxxxxxxxxxxxxxxx" />
+    <Parameter Name="EventHubConnString" Value="Endpoint=sb://xxxxxxxx.servicebus.windows.net/;SharedAccessKeyName=SendMessagePolicy;SharedAccessKey=xxxxxxxx" />
     <Parameter Name="EventHubName" Value="xxxxxxxx" />
   </Section>
 </Settings>
