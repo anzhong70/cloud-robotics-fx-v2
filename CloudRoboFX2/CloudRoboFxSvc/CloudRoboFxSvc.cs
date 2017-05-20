@@ -403,7 +403,7 @@ namespace CloudRoboticsFX
                                         }
                                         catch(Exception ex)
                                         {
-                                            rbTraceLog.WriteError("E003", $"** RbBody is not regular JSON format ** {ex.ToString()}", jo_message);
+                                            rbTraceLog.WriteError("E001", $"** RbBody is not regular JSON format ** {ex.ToString()}", jo_message);
                                             goto TxCommitLabel;
                                         }
 
@@ -413,7 +413,7 @@ namespace CloudRoboticsFX
                                         }
                                         catch (Exception ex)
                                         {
-                                            rbTraceLog.WriteError("E001", $"** Error occured in CallApps ** {ex.ToString()}", jo_message);
+                                            rbTraceLog.WriteError("E002", $"** Error occured in CallApps ** {ex.ToString()}", jo_message);
                                             goto TxCommitLabel;
                                         }
                                     }
@@ -439,7 +439,7 @@ namespace CloudRoboticsFX
                                             }
                                             catch (Exception ex)
                                             {
-                                                rbTraceLog.WriteError("E002", $"** Error occured in CreateControlMessage ** {ex.ToString()}", jo_message);
+                                                rbTraceLog.WriteError("E003", $"** Error occured in CreateControlMessage ** {ex.ToString()}", jo_message);
                                                 goto TxCommitLabel;
                                             }
                                         }
