@@ -1,0 +1,49 @@
+﻿<Window x:Class="CRoboSpeech.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:CRoboSpeech"
+        mc:Ignorable="d"
+        Title="Cloud Robotics AI explains your picture in detail" Height="480" Width="840">
+    <Grid Margin="0,0,0,2.5">
+            <DockPanel Margin="0,0,0,153">
+                <!-- メニューを画面上部に配置 -->
+                <Menu DockPanel.Dock="Top">
+                    <MenuItem Header="File (_F)">
+                        <MenuItem Header="Open File (_O)" Click="miOpen_Click" />
+                        <Separator />
+                        <MenuItem Header="Exit (_X)" Click="miExit_Click" />
+                    </MenuItem>
+                    <MenuItem Header="View (_V)">
+                        <MenuItem Header="Adjust this form" Click="miFit_Click" />
+                        <MenuItem Header="Same file size" Click="mi100_Click" />
+                    </MenuItem>
+                    <MenuItem Header="Speech (_S)">
+                        <MenuItem Header="Ayumi (ja_JP)" Click="miVoice1_Click" />
+                        <MenuItem Header="Ichiro (ja_JP)" Click="miVoice2_Click" />
+                        <MenuItem Header="ZiraRUS (en_US)" Click="miVoice3_Click" />
+                    </MenuItem>
+                </Menu>
+
+                <!-- 画像表示(Imageコントロール)を画面下部に配置 -->
+                <ScrollViewer DockPanel.Dock="Bottom" Name="scrollViewer1"
+            VerticalScrollBarVisibility="Disabled">
+                    <Image Name="image1" Stretch="Uniform" />
+                </ScrollViewer>
+            </DockPanel>
+        <Grid Height="148" VerticalAlignment="Bottom">
+            <TextBox x:Name="textBoxSpeech" HorizontalAlignment="Left" Height="84" Margin="10,10,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="395" ScrollViewer.VerticalScrollBarVisibility="Auto"/>
+            <Button x:Name="buttonStartSpeech" HorizontalAlignment="Left" Content="Start mic" Height="34" Width="70" Margin="594,102,0,12" Background="#FF243DDA" Foreground="#FFFAF7F7" Click="buttonStartSpeech_Click"/>
+            <Button x:Name="buttonExitSpeech" HorizontalAlignment="Left" Content="End mic" Height="34" Width="70" Margin="669,102,0,12" Background="#FFEC0CE7" Click="buttonExitSpeech_Click" Foreground="Snow"/>
+            <TextBox x:Name="textBoxAnswer" HorizontalAlignment="Left" Height="84" Margin="430,10,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="384" ScrollViewer.VerticalScrollBarVisibility="Auto"/>
+            <Button x:Name="buttonFinish" HorizontalAlignment="Left" Content="Finish" Height="34" Width="70" Margin="744,102,0,12" Background="#FFD9DCD5" Click="buttonFinish_Click" />
+            <Label x:Name="label" Content="Device ID :" HorizontalAlignment="Left" Margin="10,103,0,0" VerticalAlignment="Top" Width="75"/>
+            <TextBox x:Name="textBoxDeviceId" HorizontalAlignment="Left" Height="23" Margin="90,107,0,0" TextWrapping="NoWrap" Text="" VerticalAlignment="Top" Width="76"/>
+            <Label x:Name="label2" Content="Device Key :" HorizontalAlignment="Left" Margin="184,104,0,0" VerticalAlignment="Top" Width="82"/>
+            <TextBox x:Name="textBoxDeviceKey" HorizontalAlignment="Left" Height="23" Margin="271,107,0,0" TextWrapping="NoWrap" Text="" VerticalAlignment="Top" Width="197"/>
+            <Button x:Name="buttonReceiveAsync" HorizontalAlignment="Left" Content="Receiving msg" Width="93" Margin="473,107,0,19" Background="#FFD9DCD5" Click="buttonReceiveAsync_Click" />
+        </Grid>
+    </Grid>
+
+</Window>
