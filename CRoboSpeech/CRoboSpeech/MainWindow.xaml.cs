@@ -421,7 +421,7 @@ namespace CRoboSpeech
             if (localeParam == "en-US")
                 SayText("I'm sending this picture to Mr. Trump, so please wait a moment.");
             else
-                SayText("トランプさんに写真を送っています。少々お待ちください。");
+                SayText("かしこまりました。トランプさんにデータを送りますので、少々お待ちください。");
             SendMessageVisionAnalyze(CRoboType.D2D);
         }
 
@@ -788,7 +788,7 @@ namespace CRoboSpeech
                     {
                         tagText += "、" + (string)tag["name_jp"];
                     }
-                    tagText += "があるように見えます";
+                    tagText += "を見ることができます。";
                     SayText(tagText);
                 }
             }
