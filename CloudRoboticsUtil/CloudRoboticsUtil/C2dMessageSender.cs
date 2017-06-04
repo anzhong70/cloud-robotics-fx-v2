@@ -49,5 +49,22 @@ namespace CloudRoboticsUtil
                 }
             }
         }
+
+        public async void SendToEachDevice(List<string> deviceList, int position)
+        {
+            foreach (JObject jo in _ja_messages)
+            {
+                JObject jo_header = (JObject)jo[RbFormatType.RbHeader];
+                string jo_TargetType = (string)jo_header["TargetType"];
+                string jo_TargetDeviceGroupId = (string)jo_header["TargetDeviceGroupId"];
+                string jo_TargetDeviceId = (string)jo_header["TargetDeviceId"];
+                string msg = JsonConvert.SerializeObject(jo);
+                var sendMessage = new Message(Encoding.UTF8.GetBytes(msg));
+                ServiceClient serviceClient = ServiceClient.CreateFromConnectionString(_iotHubConnString);
+                string deviceId = deviceList[position];
+                await serviceClient.SendAsync(deviceId, sendMessage);
+                await serviceClient.CloseAsync();
+            }
+        }
     }
 }

@@ -313,6 +313,7 @@ namespace CRoboSpeech
 
         private void AnswerText(string message)
         {
+            // Cognitive Services - Language Understanding Intelligent Service (LUIS) API not used because of this sample code being complicated
             if (localeParam == "en-US")
             {
                 message = message.ToLower();
@@ -351,6 +352,7 @@ namespace CRoboSpeech
                     SendMessageWithPhoto();
                 }
             }
+            // このサンプルコードが複雑になる為、今回は、Cognitive Services - LUIS API(文章理解 API) は、使っていません。
             else
             {
                 if (message.IndexOf("こんにちは") >= 0 && message.IndexOf("あゆみ") >= 0)

@@ -16,12 +16,13 @@ namespace CloudRoboticsUtil
             this.eventHubName = eventHubName;
         }
 
-        public void SendMessage(string message, string deviceId)
+        public async void SendMessage(string message, string deviceId)
         {
             var eventHubClient = EventHubClient.CreateFromConnectionString(eventHubConnString, eventHubName);
             EventData eventData = new EventData(Encoding.UTF8.GetBytes(message));
             eventData.PartitionKey = deviceId;
-            eventHubClient.SendAsync(eventData);
+            await eventHubClient.SendAsync(eventData);
+            await eventHubClient.CloseAsync();
         }
 
     }
