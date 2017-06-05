@@ -267,7 +267,7 @@ namespace CloudRoboticsFX
 
                     try
                     {
-                        using (EventData eventData = await eventHubReceiver.ReceiveAsync(TimeSpan.FromMilliseconds(500)))
+                        using (EventData eventData = await eventHubReceiver.ReceiveAsync(TimeSpan.FromMilliseconds(100)))
                         {
                             // Check if eventData exists
                             if (eventData == null)
@@ -920,14 +920,13 @@ namespace CloudRoboticsFX
                     rbAppDllInfo.CachedFileName = rbAppDllInfo.FileName;
                     blobTargetFilePath = Path.Combine(rbAppDllInfo.CacheDir, rbAppDllInfo.CachedFileName);
 
-                    using (var fileStream = File.OpenWrite(blobTargetFilePath))
-                    {
-                        rbAzureStorage.BlockBlobDownload(fileStream, rbapprc.BlobContainer, rbapprc.FileName);
-                    }
-
-                    // Update cache info if DLL download from BLOB is successful.
                     lock (thisLock2)
                     {
+                        using (var fileStream = File.OpenWrite(blobTargetFilePath))
+                        {
+                            rbAzureStorage.BlockBlobDownload(fileStream, rbapprc.BlobContainer, rbapprc.FileName);
+                        }
+                        // Update cache info if DLL download from BLOB is successful.
                         rbAppDllCacheInfoDic[rbapprc.FileName] = rbAppDllInfo;
                     }
 
