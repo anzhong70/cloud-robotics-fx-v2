@@ -222,6 +222,8 @@ namespace CloudRoboticsFX
             rbTraceLog = new RbTraceLog2(rbTraceStorageConnString, rbTraceStorageTableName, 
                                             "CloudRoboticsFx2", this.Context.TraceId.ToString());
 
+            rbTraceLog.CreateLogTableIfNotExists();
+
             // These Reliable Dictionaries are used to keep track of our position in IoT Hub.
             // If this service fails over, this will allow it to pick up where it left off in the event stream.
             IReliableDictionary<string, string> offsetDictionary =
