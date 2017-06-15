@@ -576,6 +576,7 @@ namespace CRoboSpeech
                 {
                     buttonStartSpeech.IsEnabled = true;
                 });
+                this.micClient.AudioStop();
                 this.micClient.Dispose();
             }
             this.micClient = null;

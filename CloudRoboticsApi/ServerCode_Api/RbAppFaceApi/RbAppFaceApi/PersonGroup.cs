@@ -8,11 +8,13 @@ namespace RbAppFaceApi
 {
     public class PersonGroup
     {
+        private string faceApiEndpoint;
         private string faceApiKey;
         private string personGroupId;
 
-        public PersonGroup(string faceApiKey, string personGroupId)
+        public PersonGroup(string faceApiEndpoint, string faceApiKey, string personGroupId)
         {
+            this.faceApiEndpoint = faceApiEndpoint;
             this.faceApiKey = faceApiKey;
             this.personGroupId = personGroupId.ToLower();
         }
@@ -35,7 +37,7 @@ namespace RbAppFaceApi
             // Request headers
             client.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", faceApiKey);
 
-            var uri = $"https://api.projectoxford.ai/face/v1.0/persongroups/{personGroupId}";
+            var uri = $"{faceApiEndpoint}/persongroups/{personGroupId}";
 
             // Request body
             byte[] byteData = Encoding.UTF8.GetBytes("{ \"name\":\"" + personGroupId + "\",\"userData\":\"\" }");
@@ -69,7 +71,7 @@ namespace RbAppFaceApi
             // Request headers
             client.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", faceApiKey);
 
-            var uri = $"https://api.projectoxford.ai/face/v1.0/persongroups/{personGroupId}";
+            var uri = $"{faceApiEndpoint}/persongroups/{personGroupId}";
 
             // Request body
             byte[] byteData = Encoding.UTF8.GetBytes("{ \"name\":\"" + personGroupId + "\",\"userData\":\"\" }");
@@ -105,7 +107,7 @@ namespace RbAppFaceApi
             // Request headers
             client.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", faceApiKey);
 
-            var uri = $"https://api.projectoxford.ai/face/v1.0/persongroups/{personGroupId}";
+            var uri = $"{faceApiEndpoint}/persongroups/{personGroupId}";
 
             // Call REST API
             var response = client.DeleteAsync(uri);
@@ -136,7 +138,7 @@ namespace RbAppFaceApi
             // Request headers
             client.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", faceApiKey);
 
-            var uri = $"https://api.projectoxford.ai/face/v1.0/persongroups/{personGroupId}/train";
+            var uri = $"{faceApiEndpoint}/persongroups/{personGroupId}/train";
 
             // Request body
             byte[] byteData = Encoding.UTF8.GetBytes("");

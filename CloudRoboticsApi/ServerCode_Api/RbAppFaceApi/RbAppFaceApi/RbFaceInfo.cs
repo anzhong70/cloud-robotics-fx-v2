@@ -189,7 +189,7 @@ namespace RbAppFaceApi
                 ApiResult apiResult1 = new ApiResult();
                 apiResult1.IsSuccessStatusCode = true;
 
-                PersonGroup personGroup = new PersonGroup(faceApiKey, appBody.groupId);
+                PersonGroup personGroup = new PersonGroup(faceApiEndpoint, faceApiKey, appBody.groupId);
                 if (!personGroup.GetGroupExistence())
                 {
                     // Create Person Group
