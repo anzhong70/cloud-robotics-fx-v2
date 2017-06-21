@@ -269,7 +269,7 @@ namespace CloudRoboticsFX
 
                     try
                     {
-                        using (EventData eventData = await eventHubReceiver.ReceiveAsync(TimeSpan.FromMilliseconds(100)))
+                        using (EventData eventData = await eventHubReceiver.ReceiveAsync(TimeSpan.FromMilliseconds(1000)))
                         {
                             // Check if eventData exists
                             if (eventData == null)
