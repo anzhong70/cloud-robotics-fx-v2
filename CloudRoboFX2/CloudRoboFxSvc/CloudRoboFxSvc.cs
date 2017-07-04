@@ -253,8 +253,9 @@ namespace CloudRoboticsFX
                 // Get an EventHubReceiver and the MessagingFactory used to create it.
                 // The EventHubReceiver is used to get events from IoT Hub.
                 // The MessagingFactory is just saved for later so it can be closed before RunAsync exits.
-                Tuple<EventHubReceiver, MessagingFactory> iotHubInfo =
-                    await this.ConnectToIoTHubAsync(iotHubConnectionString, iotHubConsumerGroup, servicePartitionKey, epochDictionary, offsetDictionary);
+                Tuple<EventHubReceiver, MessagingFactory> iotHubInfo 
+                    = await this.ConnectToIoTHubAsync(iotHubConnectionString, iotHubConsumerGroup, 
+                                                            servicePartitionKey, epochDictionary, offsetDictionary);
 
                 eventHubReceiver = iotHubInfo.Item1;
                 messagingFactory = iotHubInfo.Item2;
@@ -269,7 +270,8 @@ namespace CloudRoboticsFX
 
                     try
                     {
-                        using (EventData eventData = await eventHubReceiver.ReceiveAsync(TimeSpan.FromMilliseconds(1000)))
+                        //using (EventData eventData = await eventHubReceiver.ReceiveAsync(TimeSpan.FromMilliseconds(1000)))
+                        using (EventData eventData = await eventHubReceiver.ReceiveAsync())
                         {
                             // Check if eventData exists
                             if (eventData == null)
@@ -469,7 +471,7 @@ namespace CloudRoboticsFX
                                         foreach (JObject jo in ja_messages)
                                         {
                                             string str_message = JsonConvert.SerializeObject(jo);
-                                            rbEventHubs.SendMessage(str_message, iothub_deviceId);
+                                            ////rbEventHubs.SendMessage(str_message, iothub_deviceId);
                                         }
                                     }
 
@@ -563,6 +565,38 @@ namespace CloudRoboticsFX
 
                         rbTraceLog.WriteError("E006", $"** FabricNotPrimaryException in RunAsync **");
                         return;
+                    }
+                    catch(MessagingCommunicationException)
+                    {
+                        try
+                        {
+                            rbTraceLog.WriteLog("** Retrying to open IoT Hub connection... **");
+                            if (eventHubReceiver != null)
+                            {
+                                try { await eventHubReceiver.CloseAsync(); } catch { /* None */ }
+                                eventHubReceiver = null;
+                            }
+                            if (messagingFactory != null)
+                            {
+                                try { await messagingFactory.CloseAsync(); } catch { /* None */ }
+                                messagingFactory = null;
+                            }
+                            iotHubInfo = await this.ConnectToIoTHubAsync(iotHubConnectionString, iotHubConsumerGroup,
+                                                    servicePartitionKey, epochDictionary, offsetDictionary);
+                            eventHubReceiver = iotHubInfo.Item1;
+                            messagingFactory = iotHubInfo.Item2;
+                            checkPoint = false;
+                            previousOffset = string.Empty;
+
+                            continue;
+                        }
+                        catch(Exception ex)
+                        {
+                            ServiceEventSource.Current.ServiceMessage(this.Context, ex.ToString());
+                            rbTraceLog.WriteError("E008", $"** Critical error occured while retrying to open IoT Hub connection ** {ex.ToString()}");
+
+                            throw;
+                        }
                     }
                     catch (Exception ex)
                     {
