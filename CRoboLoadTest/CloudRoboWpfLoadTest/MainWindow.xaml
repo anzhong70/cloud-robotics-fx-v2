@@ -58,9 +58,10 @@
         <TextBox x:Name="textBoxDevices" HorizontalAlignment="Left" Height="28" Margin="186,454,0,0" Text="" VerticalAlignment="Top" Width="651" MaxLines="1"/>
         <Label x:Name="labelLoop" Content="# of Loops per thread:" HorizontalAlignment="Left" Height="28" Margin="10,500,0,0" VerticalAlignment="Top" Width="157"/>
         <TextBox x:Name="textBoxLoops" HorizontalAlignment="Left" Height="28" Margin="186,501,0,0" TextAlignment="Right" Text="1000000" VerticalAlignment="Top" Width="122" MaxLines="1"/>
-        <Button x:Name="buttonStart" Content="Start" HorizontalAlignment="Left" Margin="478,500,0,0" VerticalAlignment="Top" Width="92" Height="35" Background="#FF637DF6" FontSize="14" Click="buttonStart_Click"/>
-        <Button x:Name="buttonStop" Content="Stop" HorizontalAlignment="Left" Margin="594,500,0,0" VerticalAlignment="Top" Width="92" Height="35" Background="#FFDE6060" FontSize="14" Click="buttonStop_Click"/>
+        <Button x:Name="buttonStart" Content="Start" HorizontalAlignment="Left" Margin="359,500,0,0" VerticalAlignment="Top" Width="92" Height="35" Background="#FF637DF6" FontSize="14" Click="buttonStart_Click"/>
+        <Button x:Name="buttonStop" Content="Stop" HorizontalAlignment="Left" Margin="475,500,0,0" VerticalAlignment="Top" Width="92" Height="35" Background="#FFDE6060" FontSize="14" Click="buttonStop_Click"/>
         <Button x:Name="buttonFinish" Content="Finish" HorizontalAlignment="Left" Margin="743,500,0,0" VerticalAlignment="Top" Width="92" Height="35" Background="#FFE9E5DC" FontSize="14" Click="buttonFinish_Click"/>
+        <Button x:Name="buttonMessageCleanup" Content="Clean Messages" HorizontalAlignment="Left" Margin="594,500,0,0" VerticalAlignment="Top" Width="132" Height="35" FontSize="14" Background="#FF3BCB4C" Click="buttonMessageCleanup_Click" />
 
     </Grid>
 </Window>

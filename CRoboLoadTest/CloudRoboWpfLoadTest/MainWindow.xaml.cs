@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading;
+using System.Windows.Threading;
 using System.Windows;
 using Microsoft.Azure.Devices;
 using Microsoft.Azure.Devices.Client;
@@ -23,6 +24,8 @@ namespace CloudRoboWpfLoadTest
         private static string lockObject = "{lockObject}";
         private static int threadCount = 0;
         public static Dictionary<string, ThreadResult> dictionaryOfThreadResult = null;
+        public static Dictionary<int, bool> messageCleanupList = null;
+        private DispatcherTimer dispatcherTimer;
 
         public MainWindow()
         {
@@ -219,8 +222,6 @@ namespace CloudRoboWpfLoadTest
                             {
                                 if (loopCount >= maxLoopCount)
                                     break;
-
-                                Thread.Sleep(100);
                             }
                             else
                             {
@@ -349,5 +350,97 @@ namespace CloudRoboWpfLoadTest
             textBoxEndP3.Text = (string)Properties.Settings.Default["TextBoxEndP3"];
         }
 
+        private async void buttonMessageCleanup_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                buttonMessageCleanup.IsEnabled = false;
+
+                string[] deviceNames = textBoxDevices.Text.Split(',');
+                listOfDeviceNames = new List<string>();
+                threadCount = listOfDeviceNames.Count;
+
+                foreach (string deviceName in deviceNames)
+                {
+                    listOfDeviceNames.Add(deviceName);
+                }
+
+                // Get Deivice List
+                DeviceInfo devInfo = new DeviceInfo(textBoxIotHub.Text, listOfDeviceNames);
+                listOfDevices = await devInfo.GetDevices();
+
+
+                var builder = Microsoft.Azure.Devices.IotHubConnectionStringBuilder.Create(textBoxIotHub.Text);
+                string iotHubHostName = builder.HostName;
+
+                // Launch multi-threads which send and receive message
+                dictionaryOfThreadResult = new Dictionary<string, ThreadResult>();
+                int threadNum = 0;
+                messageCleanupList = new Dictionary<int, bool>();
+
+                foreach (var device in listOfDevices)
+                {
+                    messageCleanupList[threadNum] = false;
+                    receiveAsync(threadNum, iotHubHostName, device.Id, device.PrimaryKey);
+                    ++threadNum;
+                }
+
+                dispatcherTimer = new DispatcherTimer(DispatcherPriority.Normal);
+                dispatcherTimer.Interval = new TimeSpan(0, 0, 1);
+                dispatcherTimer.Tick += new EventHandler(dispatcherTimer_Tick);
+                dispatcherTimer.Start();
+            }
+            catch
+            {
+                buttonMessageCleanup.IsEnabled = true;
+            }
+        }
+
+        private async void receiveAsync(int threadNum, string iotHubHostName, string deviceId, string deviceKey)
+        {
+            int maxloop = 10;
+            int cnt = 0;
+            var deviceClient = DeviceClient.Create(iotHubHostName,
+                        new DeviceAuthenticationWithRegistrySymmetricKey(deviceId, deviceKey));
+
+            while (true)
+            {
+                TimeSpan ts = new TimeSpan(0, 0, 1);
+                Microsoft.Azure.Devices.Client.Message receivedMessage = await deviceClient.ReceiveAsync(ts);
+
+                if (receivedMessage == null)
+                {
+                    ++cnt;
+                    if (cnt > maxloop)
+                    {
+                        messageCleanupList[threadNum] = true;
+                        break;
+                    }
+                }
+                else
+                {
+                    await deviceClient.CompleteAsync(receivedMessage);
+                }
+            }
+        }
+
+        void dispatcherTimer_Tick(object sender, EventArgs e)
+        {
+            bool result = true;
+
+            for (int i = 0; i < messageCleanupList.Count; i++)
+            {
+                if (!messageCleanupList[i])
+                {
+                    result = false;
+                }
+            }
+            if (result)
+            {
+                buttonMessageCleanup.IsEnabled = true;
+                dispatcherTimer.Stop();
+                MessageBox.Show("Message cleanup completed !!", "Information",MessageBoxButton.OK,MessageBoxImage.Information);
+            }
+        }
     }
 }
