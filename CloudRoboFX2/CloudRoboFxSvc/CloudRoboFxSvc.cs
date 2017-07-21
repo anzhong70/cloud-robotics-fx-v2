@@ -745,7 +745,11 @@ namespace CloudRoboticsFX
             }
             else
             {
-                CachedDllFileInfo cachedDllFileInfo = CopyBlobToLocalDir(rbappmc, rbapprc, partitionId);
+                CachedDllFileInfo cachedDllFileInfo = null;
+                lock (thisLock2)
+                {
+                    cachedDllFileInfo = CopyBlobToLocalDir(rbappmc, rbapprc, partitionId);
+                }
                 baseDirectory = cachedDllFileInfo.BaseDirectory;
                 privateDllDirectory = cachedDllFileInfo.PrivateDllDirectory;
                 cachedFileName = Path.GetFileName(cachedDllFileInfo.PrivateDllFilePath);
@@ -917,10 +921,7 @@ namespace CloudRoboticsFX
                     {
                         appDomain = appDomainList[partitionId];
                         AppDomain.Unload(appDomain);
-                        lock (thisLock2)
-                        {
-                            appDomainList[partitionId] = null;
-                        }
+                        appDomainList[partitionId] = null;
                     }
 
                     if (blobCopyAction)
@@ -956,15 +957,12 @@ namespace CloudRoboticsFX
                     rbAppDllInfo.CachedFileName = rbAppDllInfo.FileName;
                     blobTargetFilePath = Path.Combine(rbAppDllInfo.CacheDir, rbAppDllInfo.CachedFileName);
 
-                    lock (thisLock2)
+                    using (var fileStream = File.OpenWrite(blobTargetFilePath))
                     {
-                        using (var fileStream = File.OpenWrite(blobTargetFilePath))
-                        {
-                            rbAzureStorage.BlockBlobDownload(fileStream, rbapprc.BlobContainer, rbapprc.FileName);
-                        }
-                        // Update cache info if DLL download from BLOB is successful.
-                        rbAppDllCacheInfoDic[rbapprc.FileName] = rbAppDllInfo;
+                        rbAzureStorage.BlockBlobDownload(fileStream, rbapprc.BlobContainer, rbapprc.FileName);
                     }
+                    // Update cache info if DLL download from BLOB is successful.
+                    rbAppDllCacheInfoDic[rbapprc.FileName] = rbAppDllInfo;
 
                     // Logging
                     if (rbTraceLevel == RbTraceType.Detail)
@@ -991,10 +989,7 @@ namespace CloudRoboticsFX
                 File.Copy(sourceFilePath, targetFilePath, true);
 
                 // Update cache info if DLL copied successfully.
-                lock (thisLock2)
-                {
-                    rbAppDllCacheInfoDic[partitionedFileNameKey] = rbAppDllInfo_partition;
-                }
+                rbAppDllCacheInfoDic[partitionedFileNameKey] = rbAppDllInfo_partition;
 
                 // Logging
                 if (rbTraceLevel == RbTraceType.Detail)
